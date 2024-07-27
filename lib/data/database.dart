@@ -17,6 +17,9 @@ class ToDoDataBase {
   //load the data from the database
   void loadData() {
     toDoList = _myBox.get("TODOLIST");
+    DateTime parseCreatedTime(String createdTimeStr) {
+    return DateTime.parse(createdTimeStr); // Convert from ISO 8601 string to DateTime
+}
   }
 
   // update the database

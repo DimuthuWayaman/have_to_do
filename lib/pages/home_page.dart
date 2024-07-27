@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:myapp/components/dialog_box.dart';
-
+import 'package:share_plus/share_plus.dart';
 import 'package:myapp/components/todo_tile.dart';
 import 'package:myapp/data/database.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 import '../components/about_us.dart';
 
@@ -15,7 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
+  //Menu bar (drawer)
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -28,15 +30,12 @@ class _HomePageState extends State<HomePage> {
       'Index 1: S H A R E',
       style: optionStyle,
     ),
-    
   ];
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-
-
 
   //reference the hive box
   final _myBox = Hive.box('mybox');
@@ -58,7 +57,6 @@ class _HomePageState extends State<HomePage> {
   final _controller = TextEditingController();
   bool _validate = false;
 
-
   //check box was tapped
   void checkBoxChanged(bool? value, int index) {
     setState(() {
@@ -69,41 +67,35 @@ class _HomePageState extends State<HomePage> {
 
   //save new task
   void saveNewTask(BuildContext context) {
-  if (_controller.text.isEmpty) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('This field cannot be empty'), duration: const Duration(seconds: 1)),
-    );
-
-  } else {
-    setState(() {
-      db.toDoList.add([_controller.text, false]);
-      _controller.clear();
-    });
-    Navigator.of(context).pop();
-    db.updateDataBase();
+    if (_controller.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text('This field cannot be empty'),
+            duration: const Duration(milliseconds: 800)),
+      );
+    } else {
+      setState(() {
+        db.toDoList.add([_controller.text, false]);
+        _controller.clear();
+      });
+      Navigator.of(context).pop();
+      db.updateDataBase();
+    }
   }
-}
-
-
-
-
-
-
 
   //create new task
   void createNewTask() {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return DialogBox(
-        controller: _controller,
-        onSave: () => saveNewTask(context),
-        onCancel: () => Navigator.of(context).pop(),
-      );
-    },
-  );
-}
-
+    showDialog(
+      context: context,
+      builder: (context) {
+        return DialogBox(
+          controller: _controller,
+          onSave: () => saveNewTask(context),
+          onCancel: () => Navigator.of(context).pop(),
+        );
+      },
+    );
+  }
 
   //delete tasks
   void deleteTask(int index) {
@@ -114,95 +106,128 @@ class _HomePageState extends State<HomePage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Text('Task Deleted!'),
-        duration: const Duration(seconds: 2),
+        duration: const Duration(milliseconds: 500),
       ),
     );
   }
 
+  //notification and reminder
+  
+  
+    
+
 
   @override
   Widget build(BuildContext context) {
-    
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.blue[200],
         appBar: AppBar(
-
           iconTheme: IconThemeData(color: Colors.white, size: 30),
-          
           shadowColor: Colors.blue,
           backgroundColor: Colors.blue,
           centerTitle: true,
           title: Text(
-              'You Have To Do',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
+            'You Have To Do',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-        drawer: Row(
-          children: [
-            Drawer(
-              
-              backgroundColor: Colors.blue[200],
-              width: 250,
-              
-              
-             
-              child: ListView(
-            
-                padding: EdgeInsets.zero,
-                
-                children: [
-                   DrawerHeader(
-                    
-                    
-                    child:Image.asset(
-                      'assets/images/splash.png',
-                      width: 50,)
-            
+        drawer: Drawer(
+          backgroundColor: Colors.blue[200],
+          width: 250,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                  child: Image.asset(
+                'assets/images/splash.png',
+                width: 50,
+              )),
+              ListTile(
+                leading: Icon(Icons.info),
+                title: Text(
+                  'A B O U T  U S',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
                   ),
-                  ListTile(
-                    leading: Icon(Icons.info),
-                    title: Text('A B O U T  U S'),
-                    textColor: Colors.black,
-                    iconColor: Colors.black,
-                    onTap: () {
-                _onItemTapped(0);
-                Navigator.pop(context); // Close the drawer
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AboutUs()),
-                ); // Navigate to the AboutUs page
-              },
-                  ),ListTile(
-                    leading: Icon(Icons.share),
+                ),
+                // textColor: Colors.black,
+                iconColor: Colors.black,
 
-                    title: Text('S H A R E'),
-                    textColor: Colors.black,
-                    iconColor: Colors.black,
-                    onTap: () {
-                _onItemTapped(0);
-                Navigator.pop(context); // Close the drawer
-                 // Navigate to the AboutUs page
-              },
-                  ),
-                
-
-            
-                ],
+                onTap: () {
+                  _onItemTapped(0);
+                  Navigator.pop(context); // Close the drawer
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AboutUs()),
+                  ); // Navigate to the AboutUs page
+                },
               ),
-            ),
-          ],
-        ),
-      
-        
+              ListTile(
+                leading: Icon(Icons.share),
+                title: Text(
+                  'S H A R E',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                iconColor: Colors.black,
+                onTap: () {
+                  _onItemTapped(1);
+                  Navigator.pop(context); // Close the drawer
+                  Share.share(
+                      'https://play.google.com/store/apps/details?id=com.wcreation.ordinarylevel&pcampaignid=web_share'); // Navigate to the AboutUs page
+                },
+              ),
 
-        
-        
-        
+              //more from us
+              ListTile(
+                leading: Icon(Icons.link),
+                title: Text(
+                  'M O R E  A P P S',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                iconColor: Colors.black,
+                onTap: () async {
+                  Navigator.pop(context);
+                  const url =
+                      'https://play.google.com/store/apps/dev?id=6230833825196067565&hl=en'; // Replace with your URL
+                  final Uri uri = Uri.parse(url);
+                  if (await canLaunchUrl(uri)) {
+                    await launchUrl(uri);
+                  } else {
+                    throw 'Could not launch $url';
+                  }
+                },
+              ),
+
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Column(
+                  children: [
+                    const Text('V:1.0.0',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 17,
+                        )),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: createNewTask,
           child: const Icon(Icons.add, color: Colors.white),
@@ -240,7 +265,6 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          
         ),
       ),
     );

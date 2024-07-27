@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-
 class ToDoTile extends StatelessWidget {
   final String taskName;
   final bool taskCompleted;
@@ -9,19 +8,19 @@ class ToDoTile extends StatelessWidget {
   Function(BuildContext)? deleteFunction;
   
 
-  ToDoTile(
-      {super.key,
-      required this.taskName,
-      required this.taskCompleted,
-      required this.onChanged,
-      required this.deleteFunction,
-      });
-      
+  ToDoTile({
+    super.key,
+    required this.taskName,
+    required this.taskCompleted,
+    required this.onChanged,
+    required this.deleteFunction,
+    
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 25.0, left: 25.0, right: 25.0),
+      padding: const EdgeInsets.only(top: 20.0, left: 25.0, right: 25.0),
       child: Slidable(
         endActionPane: ActionPane(
           motion: StretchMotion(),
@@ -33,12 +32,11 @@ class ToDoTile extends StatelessWidget {
               icon: Icons.delete,
               label: 'Delete',
               borderRadius: BorderRadius.circular(12),
-              
-              ),
+            ),
           ],
-          ),
+        ),
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(18),
           child: Row(
             children: [
               //checkbox
@@ -48,30 +46,35 @@ class ToDoTile extends StatelessWidget {
                   side: const BorderSide(
                     color: Colors.white,
                   ),
-                  
                   checkColor: Colors.blue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4),
                   ),
                   onChanged: onChanged),
-        
+
               //Task Name
               Flexible(
-                child: Text(
-                  taskName,
-                  
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    decoration: taskCompleted
-                        ? TextDecoration.lineThrough
-                        : TextDecoration.none,
-                    decorationColor: taskCompleted
-                        ? Colors.black // or any color you prefer
-                        : Colors.transparent,
-                  ),
-                ),
-              ),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        taskName,
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.white,
+          decoration: taskCompleted
+              ? TextDecoration.lineThrough
+              : TextDecoration.none,
+          decorationColor: taskCompleted
+              ? Colors.black // or any color you prefer
+              : Colors.transparent,
+        ),
+      ),
+      SizedBox(height: 4), // Adjust spacing between task name and timestamp
+      
+    ],
+  ),
+),
             ],
           ),
           decoration: BoxDecoration(
