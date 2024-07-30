@@ -10,7 +10,7 @@ class ToDoDataBase {
   void createInitialData() {
     toDoList = [
       ["Default Tasks", false],
-      ["Slide Left to Delete", false],
+      ["Slide Left to Edit & Delete", false],
     ];
   }
 

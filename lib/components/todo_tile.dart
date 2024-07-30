@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:myapp/components/dialog_box.dart';
 
 class ToDoTile extends StatelessWidget {
   final String taskName;
+  
   final bool taskCompleted;
   Function(bool?)? onChanged;
   Function(BuildContext)? deleteFunction;
-  
+  final Function(String)? editFunction;
 
   ToDoTile({
     super.key,
@@ -14,6 +16,8 @@ class ToDoTile extends StatelessWidget {
     required this.taskCompleted,
     required this.onChanged,
     required this.deleteFunction,
+    required this.editFunction,
+    
     
   });
 
@@ -26,6 +30,14 @@ class ToDoTile extends StatelessWidget {
           motion: StretchMotion(),
           children: [
             SlidableAction(
+              onPressed: (context) => _showEditDialog(context),
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.blue,
+              icon: Icons.edit,
+              label: 'Edit',
+              borderRadius: BorderRadius.circular(12),
+            ),
+             SlidableAction(
               onPressed: deleteFunction,
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
@@ -34,6 +46,8 @@ class ToDoTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             
+
+
           ],
         ),
         child: Container(
@@ -84,6 +98,27 @@ class ToDoTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+  void _showEditDialog(BuildContext context) {
+    final TextEditingController controller = TextEditingController(text: taskName);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return DialogBox(
+          controller: controller,
+          onSave: () {
+            if (controller.text.isNotEmpty) {
+              editFunction?.call(controller.text);
+              Navigator.of(context).pop();
+            }
+          },
+          onCancel: () {
+            Navigator.of(context).pop();
+          },
+        );
+      },
     );
   }
 }

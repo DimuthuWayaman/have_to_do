@@ -6,7 +6,6 @@ import 'package:myapp/components/todo_tile.dart';
 import 'package:myapp/data/database.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 import '../components/about_us.dart';
 
 class HomePage extends StatefulWidget {
@@ -111,11 +110,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  //notification and reminder
-  
-  
-    
-
+  //edit task
 
   @override
   Widget build(BuildContext context) {
@@ -233,17 +228,40 @@ class _HomePageState extends State<HomePage> {
           child: const Icon(Icons.add, color: Colors.white),
           backgroundColor: Colors.blue,
         ),
-        body: ListView.builder(
-          itemCount: db.toDoList.length,
-          itemBuilder: (context, index) {
-            return ToDoTile(
-              taskName: db.toDoList[index][0],
-              taskCompleted: db.toDoList[index][1],
-              onChanged: (value) => checkBoxChanged(value, index),
-              deleteFunction: (context) => deleteTask(index),
-            );
-          },
-        ),
+        body: db.toDoList.isEmpty
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/create_task.png',
+                      height: 200,
+                    ), // Adjust height as needed
+                    SizedBox(height: 20),
+                    Text(
+                      'No tasks created yet. Add a new task!',
+                      style: TextStyle(fontSize: 18, color: Colors.black54),
+                    ),
+                  ],
+                ),
+              )
+            : ListView.builder(
+                itemCount: db.toDoList.length,
+                itemBuilder: (context, index) {
+                  return ToDoTile(
+                    taskName: db.toDoList[index][0],
+                    taskCompleted: db.toDoList[index][1],
+                    onChanged: (value) => checkBoxChanged(value, index),
+                    deleteFunction: (context) => deleteTask(index),
+                    editFunction: (String newTaskName) {
+                      setState(() {
+                        db.toDoList[index][0] = newTaskName;
+                      });
+                      db.updateDataBase();
+                    },
+                  );
+                },
+              ),
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.only(top: 4),
           child: BottomAppBar(
