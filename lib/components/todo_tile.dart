@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:myapp/components/dialog_box.dart';
 
+
 class ToDoTile extends StatelessWidget {
   final String taskName;
-  
   final bool taskCompleted;
   Function(bool?)? onChanged;
   Function(BuildContext)? deleteFunction;
   final Function(String)? editFunction;
+  
+  
 
   ToDoTile({
     super.key,
