@@ -14,6 +14,15 @@ A simple and efficient Todo application built with **Flutter** and **Hive** for 
 
 ---
 
+## 🌳 Branches
+
+- **`main`** – 🔥 *Latest updated version with full features.*  
+- `dev_dimuthu` – This branch is not updated and unstable.
+
+> **Note:** Always use the `main` branch for production or when cloning the latest version.
+
+---
+
 ## 🛠️ Tech Stack
 
 - 💙 **Flutter** – Cross-platform framework for building beautiful UIs.
@@ -40,6 +49,6 @@ Make sure you have the following installed:
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/your-username/todo-app.git
+git clone https://github.com/DimuthuWayaman/have_to_do.git
 cd todo-app
 flutter pub get
