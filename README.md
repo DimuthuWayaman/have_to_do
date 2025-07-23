@@ -50,5 +50,5 @@ Clone the repository and install dependencies:
 
 ```bash
 git clone https://github.com/DimuthuWayaman/have_to_do.git
-cd todo-app
+cd have_to_do
 flutter pub get
